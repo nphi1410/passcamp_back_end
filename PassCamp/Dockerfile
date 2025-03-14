@@ -2,7 +2,13 @@
 FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 
-# Copy the entire project (instead of just pom.xml and src)
+# Copy only pom.xml first (this helps with Docker caching)
+COPY pom.xml .
+
+# Download dependencies to cache them in a separate layer
+RUN mvn dependency:go-offline
+
+# Now copy the entire project (including src/)
 COPY . .
 
 # Package the application
