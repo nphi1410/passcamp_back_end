@@ -1,0 +1,14 @@
+# Docker ignore file 
+# Ignore build and dependency files
+target/
+*.jar
+
+# Ignore OS & IDE-specific files
+.DS_Store
+.vscode/
+.idea/
+*.iml
+
+# Ignore Git files
+.git/
+.gitignore
