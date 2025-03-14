@@ -1,4 +1,3 @@
-# Docker ignore file 
 # Ignore build and dependency files
 target/
 *.jar
@@ -11,4 +10,3 @@ target/
 
 # Ignore Git files
 .git/
-.gitignore
