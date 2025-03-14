@@ -3,8 +3,7 @@ FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 
 # Copy entire project (including pom.xml)
-COPY . .  # Ensure this includes pom.xml
-
+COPY . .  
 # Verify pom.xml exists before running Maven
 RUN ls -la /app && mvn clean package -DskipTests
 
