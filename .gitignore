@@ -22,3 +22,71 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+### Operating System Files ###
+.DS_Store
+Thumbs.db
+
+### Logs and temp files ###
+*.log
+hs_err_pid*
+/logs/
+/tmp/
+
+### Dependency directories ###
+/node_modules/
+/vendor/
+
+### Maven ###
+/target/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/mvnw
+/mvnw.cmd
+/.mvn/wrapper/maven-wrapper.jar
+
+### Gradle ###
+/build/
+/.gradle/
+/gradle/
+/gradlew
+/gradlew.bat
+/.gradle
+
+### IDEs ###
+# IntelliJ IDEA
+/.idea/
+/*.iml
+*.ipr
+*.iws
+
+# VS Code
+/.vscode/
+
+# Eclipse
+/.classpath
+/.project
+/.settings/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### Application-specific ###
+# Ignore environment files
+.env
+.env.local
+.env.*.local
+
+# Ignore JAR/WAR files
+*.jar
+*.war
+*.ear
+
+# Ignore Spring Boot specific files
+/BOOT-INF/
+/META-INF/
+/*.pid
