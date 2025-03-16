@@ -37,7 +37,7 @@ public class RegisterDto {
     private Gender gender;
 
     @Past
-    @JsonFormat(pattern = Constant.BIRTHDAY_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
     @Email

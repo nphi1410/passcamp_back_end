@@ -19,4 +19,6 @@ public interface CartService {
     String addToCart(CartItem cartItem);
     
     List<CartItem> getCartItems(String cartId);
+    
+    String removeFromCart(String itemId);
 }

@@ -9,14 +9,17 @@ import PassCamp.ass.main.constant.IsEnable;
 import PassCamp.ass.main.constant.Role;
 import PassCamp.ass.main.dto.RegisterDto;
 import PassCamp.ass.main.entity.Account;
+import PassCamp.ass.main.entity.Cart;
 import PassCamp.ass.main.entity.EmailDetails;
 import PassCamp.ass.main.repository.AccountRepository;
+import PassCamp.ass.main.repository.CartRepository;
 import PassCamp.ass.main.service.AccountService;
 import PassCamp.ass.main.service.EmailService;
 import PassCamp.ass.main.service.LoginService;
 import PassCamp.ass.main.util.Generate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,6 +31,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private CartRepository cartRepository;
+    @Lazy
     @Autowired
     private LoginService loginService;
     @Autowired
@@ -52,11 +58,16 @@ public class AccountServiceImpl implements AccountService {
         newAccount.setGender(registerDto.getGender());
         newAccount.setIsEnable(IsEnable.TRUE);
         newAccount.setRole(Role.USER);
-
-        // Save account to DB
-        loginService.createLoginAccount(registerDto, accountId);
+        
+        Cart cart = new Cart();
+        cart.setCartId(IdPrefix.CART+cartRepository.findLastCartId());
+        cart.setAccountId(accountId);
+        cart.setItemAmount(0);
+        cart.setTotalPrice(0);
+        
         accountRepository.save(newAccount);
-
+        cartRepository.save(cart);
+        loginService.createLoginAccount(registerDto, accountId);
         return true;
     }
 
@@ -84,6 +95,11 @@ public class AccountServiceImpl implements AccountService {
     public String updateAccount(Account updatedAccount) {
         accountRepository.save(updatedAccount);
         return "updated";
+    }
+
+    @Override
+    public Account getAccountByUsername(String username) {
+        return accountRepository.findByUsername(username);
     }
 
 }

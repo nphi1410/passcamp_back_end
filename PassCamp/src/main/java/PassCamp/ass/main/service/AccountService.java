@@ -17,6 +17,8 @@ public interface AccountService {
     
     public Account getAccount(String accountId);
     
+    public Account getAccountByUsername(String username);
+    
     public String updateAccount(Account updatedAccount);
 
     public boolean createAccount(RegisterDto registerDto);

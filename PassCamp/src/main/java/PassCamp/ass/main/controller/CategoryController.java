@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
  *
  * @author AD
  */
-@CrossOrigin(origins = "*")
 @Controller
 public class CategoryController {
 
