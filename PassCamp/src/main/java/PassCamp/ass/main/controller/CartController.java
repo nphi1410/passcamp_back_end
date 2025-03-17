@@ -11,7 +11,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,16 +40,16 @@ public class CartController {
         return ResponseEntity.ok(response);  
     }
 
-    @GetMapping("/{cartId}/items")
-    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable String cartId) {
+    @GetMapping("/items")
+    public ResponseEntity<List<CartItem>> getCartItems(@RequestParam String cartId) {
         List<CartItem> cartItems = cartService.getCartItems(cartId);
 
         return ResponseEntity.ok(cartItems);
 
     }
-
-    @PostMapping("/remove/{cartItemId}")
-    public ResponseEntity<String> removeFromCart(@PathVariable String cartItemId) {
+    
+    @PostMapping("/remove")
+    public ResponseEntity<String> removeFromCart(@RequestParam String cartItemId) {
         String response = cartService.removeFromCart(cartItemId);
         return ResponseEntity.ok(response);
     }

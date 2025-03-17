@@ -6,7 +6,9 @@ PassCamp\ass\main\dto\ItemDto.class
 PassCamp\ass\main\dto\LoginDto.class
 PassCamp\ass\main\constant\ChangeType.class
 PassCamp\ass\main\controller\OrderController.class
+PassCamp\ass\main\security\PasswordConfig.class
 PassCamp\ass\main\service\CartService.class
+PassCamp\ass\main\security\AuthFilter.class
 PassCamp\ass\main\entity\Order.class
 PassCamp\ass\main\service\implement\AccountServiceImpl.class
 PassCamp\ass\main\service\implement\LoginServiceImpl.class
@@ -27,7 +29,6 @@ PassCamp\ass\main\MainApplication.class
 PassCamp\ass\main\service\OrderService.class
 PassCamp\ass\main\service\ItemService.class
 PassCamp\ass\main\controller\LoginController.class
-PassCamp\ass\main\security\CorsConfig.class
 PassCamp\ass\main\entity\Payment.class
 PassCamp\ass\main\service\BankPaymentService.class
 PassCamp\ass\main\service\AuditLogService.class
@@ -35,7 +36,6 @@ PassCamp\ass\main\service\implement\EmailServiceImpl.class
 PassCamp\ass\main\controller\CartController.class
 PassCamp\ass\main\controller\AccountController.class
 PassCamp\ass\main\repository\ItemImageRepository.class
-PassCamp\ass\main\security\SecurityConfig.class
 PassCamp\ass\main\service\EmailService.class
 PassCamp\ass\main\entity\BankPayment.class
 PassCamp\ass\main\repository\PaymentRepository.class

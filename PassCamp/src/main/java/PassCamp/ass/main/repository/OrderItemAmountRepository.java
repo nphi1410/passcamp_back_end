@@ -5,6 +5,9 @@
 package PassCamp.ass.main.repository;
 
 import PassCamp.ass.main.entity.OrderItemAmount;
+import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +19,9 @@ import org.springframework.stereotype.Repository;
 public interface OrderItemAmountRepository extends JpaRepository<OrderItemAmount, String> {
 
     OrderItemAmount findByItemId(String itemId);
+    
+    Page<OrderItemAmount> findByItemIdIn(
+                        List<String> itemIds, 
+                        Pageable pageable
+                );
 }

@@ -43,40 +43,34 @@ public class LoginServiceImpl implements LoginService {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
+        Map<String, Object> responseBody = new HashMap<>();
         Login login = loginRepository.findByUsername(loginDto.getUsername());
 
-        Map<String, Object> responseBody = new HashMap<>();
-        if (login == null
-                || !bCryptPasswordEncoder.matches(
-                        loginDto.getPassword(),
-                        login.getPasswordHash()
-                )) {
-            String message = "Error: Invalid username or password";
-            responseBody.put("message", message);
+        if (login == null || !bCryptPasswordEncoder.matches(loginDto.getPassword(), login.getPasswordHash())) {
+            responseBody.put("message", "Error: Invalid username or password");
             responseBody.put("status", "failed");
             return responseBody;
         }
 
-        Account loginAccount = accountService.getAccount(
-                login.getAccountId()
-        );
+        Account loginAccount = accountService.getAccount(login.getAccountId());
 
         HttpSession session = request.getSession();
-        session.setAttribute("session", loginAccount.getUsername());
-        session.setMaxInactiveInterval(60*60);
+        session.setAttribute("loggedInUser", loginAccount);
+        session.setAttribute("role", loginAccount.getRole() == 2 ? "ADMIN" : "USER");
+        session.setMaxInactiveInterval(60 * 60);
 
         if (loginDto.isRemember()) {
-            Cookie cookie = new Cookie("rememberMe", loginAccount.getUsername());
-            cookie.setMaxAge(60*60*24*7);
+            Cookie cookie = new Cookie("rememberMe", loginAccount.getRole() == 2 ? "ADMIN" : "USER");
+            cookie.setMaxAge(60 * 60 * 24 * 7);
             cookie.setPath("/");
             cookie.setHttpOnly(true);
             cookie.setSecure(false);
             response.addCookie(cookie);
+            responseBody.put("rememberMe", loginAccount.getRole() == 2 ? "ADMIN" : "USER");
         }
 
-        responseBody.put("Status", "success");
-        responseBody.put("is remem", loginDto);
-        responseBody.put("user", loginAccount);
+        responseBody.put("loggedInUser", loginAccount);
+        responseBody.put("role", loginAccount.getRole() == 2 ? "ADMIN" : "USER");
 
         return responseBody;
     }

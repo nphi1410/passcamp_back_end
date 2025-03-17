@@ -11,11 +11,15 @@ import PassCamp.ass.main.dto.AccountDto;
 import PassCamp.ass.main.dto.ItemDto;
 import PassCamp.ass.main.entity.Category;
 import PassCamp.ass.main.entity.Item;
+import PassCamp.ass.main.entity.ItemAmount;
+import PassCamp.ass.main.entity.ItemCategory;
 import PassCamp.ass.main.entity.ItemImage;
+import PassCamp.ass.main.entity.OrderItemAmount;
 import PassCamp.ass.main.repository.ItemAmountRepository;
 import PassCamp.ass.main.repository.ItemCategoryRepository;
 import PassCamp.ass.main.repository.ItemImageRepository;
 import PassCamp.ass.main.repository.ItemRepository;
+import PassCamp.ass.main.repository.OrderItemAmountRepository;
 import PassCamp.ass.main.service.AccountService;
 import PassCamp.ass.main.service.CategoryService;
 import PassCamp.ass.main.service.ItemService;
@@ -25,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +37,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -49,6 +55,8 @@ public class ItemServiceImpl implements ItemService {
     private ItemAmountRepository itemAmountRepository;
     @Autowired
     private ItemCategoryRepository itemCategoryRepository;
+    @Autowired
+    private OrderItemAmountRepository orderItemRepository;
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -105,7 +113,7 @@ public class ItemServiceImpl implements ItemService {
     public int getItemAmount(String itemId) {
         return itemAmountRepository.findByItemId(itemId).getAvailableAmount();
     }
-    
+
     @Override
     public List<Category> getItemCategory(String itemId) {
         List<String> categorieIds = itemCategoryRepository
@@ -123,7 +131,7 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getItemList(List<String> itemIdList) {
         return itemRepository.findByItemIdIn(itemIdList);
     }
-    
+
     @Override
     public ItemDto getItemDetails(String itemId) {
         ItemDto itemDto = new ItemDto();
@@ -145,24 +153,50 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getSellItems(String sellerAccountId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Page<ItemDto> getItemsBySeller(String sellerAccountId, Pageable pageable, boolean sold) {
+        List<Item> items = itemRepository.findBySellerAccountId(sellerAccountId);
+        List<String> itemIds = items.stream()
+                .map(Item::getItemId)
+                .collect(Collectors.toList());
+
+        if (sold) {
+            Page<OrderItemAmount> itemPage = orderItemRepository.findByItemIdIn(itemIds, pageable);
+            return itemPage.map(item -> getItemDetails(item.getItemId()));
+        }
+        
+        
+        Page<Item> itemPage = itemRepository.findByItemIdIn(itemIds, pageable);
+        return itemPage.map(item -> getItemDetails(item.getItemId()));
     }
 
     @Override
-    public List<Item> getSoldItems(String sellerAccountId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public String addSellItem(Item item) {
+    @Transactional
+    public String saveSellItem(ItemDto itemDto) {
+        Item item = itemDto.getItem();
         itemRepository.save(item);
-        return "item created";
+
+        ItemAmount itemAmount = new ItemAmount(
+                item.getItemId(),
+                itemDto.getAvailableAmount()
+        );
+        itemAmountRepository.save(itemAmount);
+
+        List<ItemCategory> categories = itemDto.getCategories().stream()
+                .map(category -> new ItemCategory(
+                item.getItemId(),
+                category.getCategoryId())
+                )
+                .toList();
+        itemCategoryRepository.saveAll(categories);
+
+        return "Item save successfully";
     }
 
     @Override
-    public String updateSellItem(Item updatedItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String removeSellItem(String itemId) {
+        itemRepository.deleteById(itemId);
+
+        return "Item removed successfully";
     }
 
     @Override

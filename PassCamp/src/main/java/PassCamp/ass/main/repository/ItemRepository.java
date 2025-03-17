@@ -35,5 +35,4 @@ public interface ItemRepository extends JpaRepository<Item, String> {
     Page<Item> findByItemIdIn(List<String> itemIds, Pageable pageable);
 
     List<Item> findAllByItemName(String name);
-
 }

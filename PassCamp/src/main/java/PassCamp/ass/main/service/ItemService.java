@@ -6,7 +6,6 @@ package PassCamp.ass.main.service;
 
 import PassCamp.ass.main.dto.AccountDto;
 import PassCamp.ass.main.dto.ItemDto;
-import PassCamp.ass.main.dto.ItemDto;
 import PassCamp.ass.main.entity.Category;
 import PassCamp.ass.main.entity.Item;
 import java.util.List;
@@ -39,13 +38,15 @@ public interface ItemService {
 
     ItemDto getItemDetails(String itemId);
 
-    List<Item> getSellItems(String sellerAccountId);
+    Page<ItemDto> getItemsBySeller(
+            String sellerAccountId, 
+            Pageable pageable, 
+            boolean sold
+    );
 
-    List<Item> getSoldItems(String sellerAccountId);
-
-    String addSellItem(Item item);
-
-    String updateSellItem(Item updatedItem);
+    String saveSellItem(ItemDto itemDto);
+    
+    String removeSellItem(String itemId);
 
     String uploadImage(MultipartFile file, AccountDto accountDto, String type);
 }

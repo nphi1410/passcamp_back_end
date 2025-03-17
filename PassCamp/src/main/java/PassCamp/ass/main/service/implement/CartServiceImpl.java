@@ -19,29 +19,34 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CartServiceImpl implements CartService {
-
+    
     @Autowired
     private CartRepository cartRepository;
-
+    
     @Autowired
     private CartItemRepository cartItemRepository;
-
+    
     @Override
     public Cart getCart(String accountId) {
         return cartRepository.findByAccountId(accountId);
     }
-
+    
     @Override
     public String addToCart(CartItem cartItem) {
+        Cart cart = cartRepository.findByCartId(cartItem.getCartId());
+        cart.setItemAmount(cart.getItemAmount() + 1);
+        cart.setTotalPrice(cart.getTotalPrice()+cartItem.getTotalPrice());
+        
+        cartRepository.save(cart);
         cartItemRepository.save(cartItem);
         return "Item added";
     }
     
     @Override
-    public List<CartItem> getCartItems(String cartId){
+    public List<CartItem> getCartItems(String cartId) {
         return cartItemRepository.findByCartId(cartId);
     }
-
+    
     @Override
     public String removeFromCart(String itemId) {
         CartItem cartItem = cartItemRepository.findByItemId(itemId);

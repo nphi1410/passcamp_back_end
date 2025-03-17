@@ -81,17 +81,17 @@ public class LoginController {
             res.put("cookie name", "rememberMe");
             res.put("cookie status", "active");
 
-            if (session == null || session.getAttribute("session") == null) {
+            if (session == null || session.getAttribute("role") == null) {
                 session = request.getSession(true);  
-                session.setAttribute("session", currentCookie.getValue());
+                session.setAttribute("role", currentCookie.getValue());
                 session.setMaxInactiveInterval(20);  
             }
         }
 
         // Check session status
-        if (session != null && session.getAttribute("session") != null) {
+        if (session != null && session.getAttribute("role") != null) {
             res.put("session status", "active");
-            res.put("session user", session.getAttribute("session"));
+            res.put("session user", session.getAttribute("role"));
             res.put("session time remaining", session.getMaxInactiveInterval() + " seconds");
         } else {
             res.put("session status", "expired");
